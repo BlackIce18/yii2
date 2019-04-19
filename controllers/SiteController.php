@@ -68,7 +68,7 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $query = Goods::find()->getActive(); // Активные
+        $query = GoodsSeacrh::getActive(); // Активные
         $pagination = new Pagination([
             'defaultPageSize' => 1,
             'totalCount' => $query->count(),
