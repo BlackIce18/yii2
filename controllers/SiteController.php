@@ -1,7 +1,5 @@
-<?php
-
+<?php 
 namespace app\controllers;
-
 use Yii;
 use yii\filters\AccessControl;
 use yii\web\Controller;
@@ -10,12 +8,8 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
 
-use app\models\GoodsSeacrh;
-/*use app\models\Goods;
-use app\queries\GoodsQuery;
-use app\forms\GoodsForm;*/
+use app\models\Category;
 
-use yii\data\Pagination;
 
 class SiteController extends Controller
 {
@@ -44,7 +38,6 @@ class SiteController extends Controller
             ],
         ];
     }
-
     /**
      * {@inheritdoc}
      */
@@ -60,7 +53,6 @@ class SiteController extends Controller
             ],
         ];
     }
-
     /**
      * Displays homepage.
      *
@@ -68,20 +60,10 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        $query = GoodsSeacrh::getActive(); // Активные
-        $pagination = new Pagination([
-            'defaultPageSize' => 1,
-            'totalCount' => $query->count(),
-        ]);
+        $labels = (new Category())->attributeLabels();
+        $categories = Category::find()->allCategories();
 
-        $goods = $query->orderBy('id')
-           ->offset($pagination->offset)
-           ->limit($pagination->limit)->all();
-
-        return $this->render('index',[
-            'goods' => $goods,
-            'pagination' => $pagination,
-        ]);
+        return $this->render('index',['categories'=>$categories,'labels'=>$labels]);
     }
 
     /**
@@ -94,12 +76,10 @@ class SiteController extends Controller
         if (!Yii::$app->user->isGuest) {
             return $this->goHome();
         }
-
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
         }
-
         $model->password = '';
         return $this->render('login', [
             'model' => $model,
@@ -113,10 +93,8 @@ class SiteController extends Controller
     public function actionLogout()
     {
         Yii::$app->user->logout();
-
         return $this->goHome();
     }
-
     /**
      * Displays contact page.
      *
@@ -127,14 +105,12 @@ class SiteController extends Controller
         $model = new ContactForm();
         if ($model->load(Yii::$app->request->post()) && $model->contact(Yii::$app->params['adminEmail'])) {
             Yii::$app->session->setFlash('contactFormSubmitted');
-
             return $this->refresh();
         }
         return $this->render('contact', [
             'model' => $model,
         ]);
     }
-
     /**
      * Displays about page.
      *

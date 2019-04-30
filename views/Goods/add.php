@@ -1,18 +1,19 @@
 <?php
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use app\models\Category;
 ?>
-<div class="col-md-8 col-md-offset-2">
-<?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($goods,'title')->textInput(['autofocus' => true, 'value'=>$Good->title])?>
-    <?= $form->field($goods,'price')->textInput(['value'=>$Good->price])?>
-    <?= $form->field($goods,'status')->textInput(['value'=>$Good->status])?>
-    <?= $form->field($goods,'category_id')->textInput(['value'=>$Good->category_id])?>
-    <?= $form->field($goods,'description')->textarea(['rows' => '6','value'=>$Good->description])?>
-    <?= $form->field($goods,'created_at')->hiddenInput(['value'=>$Good->created_at])->label(false)?>
-    <?= $form->field($goods,'updated_at')->hiddenInput(['value'=>$Good->updated_at])->label(false)?>
-    <?= Html::submitButton('Отправить', ['class' => 'btn btn-primary']) ?>
-
-<?php ActiveForm::end(); ?>
-</div>
+<?php 
+    (\Yii::$app->session->hasFlash('success')) ? \Yii::$app->session->getFlash('success') : \Yii::$app->session->getFlash('error');
+?>
+<?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+     <?= $form->field($GoodsForm,'name');?>
+    <?= $form->field($GoodsForm,'price');?>
+    <?= $form->field($GoodsForm,'description');?>
+    <?= $form->field($GoodsForm,'category_id')->dropdownList(
+        Category::find()->select(['name', 'id'])->where(['<>','id','4'])->indexBy('id')->column(),
+        ['prompt'=>'Выберите категорию']
+    );?>
+    <?= $form->field($GoodsForm,'images[]')->fileInput(['multiple'=>'multiple', 'accept' => 'image/*']);?> 
+    <?= Html::submitButton('Добавить',['class'=>'btn btn-primary']);?>
+<?php ActiveForm::end();?>

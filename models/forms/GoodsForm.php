@@ -1,31 +1,19 @@
 <?php
-namespace app\models;
+namespace app\models\forms;
 
-use yii\db\ActiveRecord;
+use yii\base\Model;
+use app\models\Goods;
 
-use yii\behaviors\TimestampBehavior;
-use yii\db\Expression;
+class GoodsForm extends Model {
+    public $id;
+    public $name;
+    public $category_id;
+    public $price;
+    public $description;
+    public $images;
+    public $created_at;
+    public $updated_at;
 
-
-class Goods extends ActiveRecord {
-
-    public function behaviors() {
-        return [
-            'timestamp' => [
-                'class' => TimestampBehavior::className(),
-                'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at','updated_at'],
-                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at'],
-                ],
-                'value' => new Expression('now()'),
-            ]
-        ];
-    }
-
-    public static function tableName() {
-        return '{{%goods}}';
-    }
-    
     public function rules() {
         return [
             [['name'],'string','max'=>255],

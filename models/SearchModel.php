@@ -1,15 +1,16 @@
 <?php
 namespace app\models;
 
+use app\models\Goods;
 use app\queries\GoodsQuery;
 
 use yii\data\ActiveDataProvider;
 
 class GoodsSeacrh extends Goods {
-    public static function getGoodById($id) {
+    public function getGoodById($id) {
         return $this->findOne($id);
     }
-    public static function getActive() {
+    public function getActive() {
         return $this->find()->getActive();
     }
 }
